@@ -50,6 +50,11 @@ class UserServices{
           token:`Bearer ${token}`, refreshToken:`Bearer ${refreshToken}`,}} 
         }
     }
+    async updateProfile(req,data){
+        return {
+            data:'your details'
+        }
+    }
 
 }
 
