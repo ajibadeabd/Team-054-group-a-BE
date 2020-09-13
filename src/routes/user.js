@@ -1,12 +1,11 @@
-var express = require('express');
-var router = express.Router();
-var userCntrl = require('../controller/userController');
+const express = require('express')
+const router = express.Router()
+const userCtrl = require('../controllers/userCtrl')
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+
+//forgot password
+router.post("/login",userCtrl.login)
+    router.get("/test",  (req,res)=>{
+    res.send('work')
 });
-router.post('/login', userCntrl.login);
-// router.post('/register', userCntrl.register);
-
-module.exports = router;
+module.exports =  router
