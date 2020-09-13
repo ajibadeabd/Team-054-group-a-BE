@@ -10,7 +10,7 @@ const config = require('./src/config/constants')
 const database = require('./src/config/database')
 const errorMiddleware = require('./src/middlewares/errorHandler')
 const apiRoutes = require('./src/routes')
-
+// require(dotenv).config()
 
 //endPoint
 app.use('/api/v1', apiRoutes)

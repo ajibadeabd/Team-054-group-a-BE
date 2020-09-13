@@ -5,6 +5,7 @@ if(!dotEnvFound) throw new Error("Could not find dotEnv file")
 
 module.exports = {
     port: process.env.PORT,
-    databaseURI : process.env.DATABASE_URI, 
+    localdatabaseURI :process.env.localDATABASE_URI,
+    atlasdatabaseURI :process.env.atlasDATABASE_URI,
     publicKey: process.env.public_key, 
 }
