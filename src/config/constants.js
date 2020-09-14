@@ -9,4 +9,7 @@ module.exports = {
     atlasdatabaseURI :process.env.atlasDATABASE_URI,
     publicKey: process.env.public_key,
     JwtStrategy: process.env.jwtSecret, 
+    refreshToken_expiresIn: process.env.refreshToken_expiresIn,
+    accessTokenexpires_expiresIn: process.env.accessTokenexpires_expiresIn,
+    
 }

@@ -1,6 +1,7 @@
 const User = require('../models/userModel')
 const CustomError = require('../utility/CustomError')
 const Email = require('../utility/mailServices')
+const config = require('../config/constants')
 const Crypto = require("crypto");
 const _ = require("lodash");
 const bcrypt = require("bcryptjs");
@@ -36,14 +37,13 @@ class UserServices{
         let user =await User.findOne({email:data.email})
           if(!user) throw  new CustomError("no user found", 404,false); 
         else{ let payload={ userName:user.userName, _id:user._id,role:user.role, email:user.email,}
-        const token = jwt.sign(payload, process.env.jwtSecret, {expiresIn: 3600000000000000000  });
-          const refreshToken = jwt.sign(payload,process.env.jwtSecret, {expiresIn: 3600000000000000000 });
+        const token = jwt.sign(payload, process.env.jwtSecret, {expiresIn: config.accessTokenexpires_expiresIn});
+          const refreshToken = jwt.sign(payload,process.env.jwtSecret, {expiresIn: config.refreshToken_expiresIn });
          
     user = _.pick(user, [
       "_id",
       'userName',
-      "email",
-      "role","block","isEmailVerified"
+      "email"
     ]);
           return{success:true,  status:200, data:{message:'you sucessfully logged in',
           user,
@@ -52,21 +52,33 @@ class UserServices{
     }
     async updateProfile(req,data){
         return {
-            data:'your details'
+            message:'your details',success:true,status:201
         }
     }
-    async resetPasswor(req,data){
+
+    async forgetPassword(req,data){
+     let {email} = data;
+     if(!email) throw new CustomError("please specify your email", 400,false); 
+     let isExist = await User.findOne({email:email});
+     if(!isExist) throw new CustomError("you do not have an account with us", 400,false);
+     return  {success:true,status:201}
+
+
+  }
+
+    async resetPassword(req,data){
       let token = req.params.id;
-      let {newPass,newPass2}=req.body;
-      if(newPass != newPass2) throw new CustomError("password does not match", 400,false); 
-      let tokenExist = await User.find({
+      let {newPassword1,newPassword2}=data;
+      let tokenExist = await User.findOne({
         resetPasswordToken:token,
-        resetPasswordExpires:{gte:date.now()
-        }});
+        // resetPasswordExpires:{gte:Date}
+      });
       if(!tokenExist) throw new CustomError("token expires or an invalid link", 400,false); 
-         tokenExist.password=newPass;
+        
+      if(newPassword1!== newPassword2) throw new CustomError("password does not match", 400,false); 
+       tokenExist.password=newPassword1;
          tokenExist.save();
-         return null
+         return {success:true,status:201}
 
   }
 

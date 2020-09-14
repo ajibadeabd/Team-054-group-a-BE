@@ -16,7 +16,16 @@ class UserCtrl{
       const data = await userServices.updateProfile(req,req.body)
       res.status(201).json(response(true,'profile has successfully been updated',data))
     }
+ 
+    async resetPassword(req, res){
+      const data = await userServices.resetPassword(req,req.body)
+      res.status(201).json(response(true,"your password was reset successfully",data))
+    }
 
+    async forgetPassword(req, res){
+      const data = await userServices.forgetPassword(req,req.body)
+      res.status(200).json(response(true,"a link has been sent to your email",data))
+    }
 }
 
 
