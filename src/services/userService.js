@@ -55,6 +55,20 @@ class UserServices{
             data:'your details'
         }
     }
+    async resetPasswor(req,data){
+      let token = req.params.id;
+      let {newPass,newPass2}=req.body;
+      if(newPass != newPass2) throw new CustomError("password does not match", 400,false); 
+      let tokenExist = await User.find({
+        resetPasswordToken:token,
+        resetPasswordExpires:{gte:date.now()
+        }});
+      if(!tokenExist) throw new CustomError("token expires or an invalid link", 400,false); 
+         tokenExist.password=newPass;
+         tokenExist.save();
+         return null
+
+  }
 
 }
 
