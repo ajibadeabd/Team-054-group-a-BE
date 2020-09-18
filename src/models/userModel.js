@@ -1,20 +1,32 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const bcrypt = require("bcryptjs");
-
-
-
 const userModel  = new Schema({
-    userName:{
+    firstName:{
         type:String, 
         trim: true,
-        required: [true, "Fullname is required"]
+        required: [true, "firstname is required"]
+    },
+    lastName:{
+        type:String, 
+        trim: true,
+        required: [true, "lastname is required"]
     },
     gender:{
         type:String, 
         enum: ["male", "female", "others"],
         trim: true,
-        // required: [true, "Gender is required"]
+        required: [true, "Gender is required"]
+    },
+    phoneNumber:{
+        type:String, 
+        trim: true,
+        required: [true, "Phone Number is required"]
+    },
+    address:{
+        type:String, 
+        trim: true,
+        required: [true, "address Number is required"]
     },
     email:{
         type:String,
@@ -23,25 +35,25 @@ const userModel  = new Schema({
         unique: true,
         match: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
     },
-    phone: {
-        type:String,
-        trim: true,
-        // required: [true, "Phone is required"]
-    },
-    country: {
-        type:String,
-        trim: true,
-        // required: [true, "Country is required"]
-    },
-    resetPasswordToken: String,
-    resetPasswordExpires: Date,
     password: {
         type:String,
         trim: true,
         required: [true, "Password is required"]
     },
+
+    resetPasswordToken: String,
     
-    
+    resetPasswordExpires: Date,
+
+    userCategoryId: {
+        type: Schema.Types.ObjectId,
+       required: [true, "userCategoryId  is required"],
+       ref: "userCategory",
+     },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+      },
 })
 // Encrypt password using bcrypt
 
