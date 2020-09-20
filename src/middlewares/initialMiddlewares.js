@@ -15,8 +15,8 @@ module.exports = function(app){
     app.use(express.urlencoded({extended:false}))
     app.use(express.static(path.join(__dirname, 'public')));
     app.use('/api/v1', indexRouter);
+    require("../config/passport")(passport)
 
     app.use(passport.initialize())
-    require("../config/passport")(passport)
 
 }
