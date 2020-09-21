@@ -40,10 +40,9 @@ class UserServices{
      loginpasswordValidator(data) 
         let user =await User.findOne({email:data.email})
           if(!user) throw  new CustomError("no user found", 404,false); 
-        else{ let payload={ userName:user.userName, _id:user._id,role:user.role, email:user.email,}
+        else{ let payload={ firstName:user.firstName,lastName:user.lastName, _id:user._id, email:user.email}
         const token = jwt.sign(payload, process.env.jwtSecret, {expiresIn: config.accessTokenexpires_expiresIn});
           const refreshToken = jwt.sign(payload,process.env.jwtSecret, {expiresIn: config.refreshToken_expiresIn });
-         
     user = _.pick(user, ["_id","email",'lastName','firstName','phoneNumber','address','gender','userCategoryId']);
           return{success:true,  status:200, data:{message:'you sucessfully logged in',
           user,

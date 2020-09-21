@@ -1,4 +1,4 @@
-const { Mongoose } = require('mongoose');
+const mongoose  = require('mongoose');
 const CustomError = require('./CustomError')
 
 
@@ -38,6 +38,28 @@ exports.userCategoryValidator =(data)=>{
 }
 
 exports.idValidator =(id)=>{
-   let isValid = Mongoose.type.o
+   let isValid= mongoose.Types.ObjectId.isValid(id)
+
     if(!isValid) throw new CustomError("invalid id", 400,false);
 }
+exports.productNameValidator =(data)=>{
+    // let isValid = Mongoose.type.o
+     if(!data.productName || data.productName.length<2) 
+     throw new CustomError("pls provide a valid productName", 400,false);
+ }
+ exports.statusValidator =(data)=>{
+    const status = ['available','sold']
+    if(!status.includes(data.status)) throw new CustomError("provide a valid status of your product", 400,false);
+ }
+ exports.stockQuantityValidator =(data)=>{
+     
+     if(isNaN(data.stockQuantity) || data.stockQuantity<1) throw new CustomError("provide a stockQuantity", 400,false);
+ }
+ exports.unitValidator =(data)=>{
+    if(isNaN(data.unit) || data.unit<1)  throw new CustomError("provide a valid unit", 400,false);
+
+ }
+ exports.priceValidator =(data)=>{
+    if(isNaN(data.price)  || !data.price || data.price<0)  throw new CustomError("provide a valid price", 400,false);
+
+ }

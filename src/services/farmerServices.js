@@ -1,7 +1,8 @@
 const Store = require('../models/stores')
 const Product = require('../models/product')
 const CustomError = require('../utility/CustomError')
-const {idValidator} = require('../utility/validator')
+const {idValidator,statusValidator,stockQuantityValidator,
+       productNameValidator,priceValidator,unitValidator} = require('../utility/validator')
 const Email = require('../utility/mailServices')
 const config = require('../config/constants')
 const _ = require("lodash");
@@ -11,49 +12,77 @@ const _ = require("lodash");
 class farmerServices{
     async addProduct(req,data){
         data=_.pick(data,['productName','status','price','stockQuantity','unit'])
-        // data.ownerId=req.user._id
-        // let saveProduct = await new Product(data)
-        // await saveProduct.save()
+        productNameValidator(data)
+        priceValidator(data)
+        unitValidator(data)
+        statusValidator(data)
+        stockQuantityValidator(data)
+        data.ownerId=req.user._id
+        let saveProduct = await new Product(data)
+        await saveProduct.save()
 
-return config.accessTokenexpires_expiresIn
+        return {message:`${saveProduct.productName} has been saved`,status:200,success:true}
+    }
+
+    async getProduct(req,data){
+        data.ownerId=req.user._id
+        let isYours = await Product.find({__v:0})
+        if(!isYours || isYours.length===0) throw new  CustomError("you dont have any product", 404,false); 
+        return {message:`all product fetch`,status:200,success:true,allproducts:isYours}
     }
 
     async editProduct(req,data){
         data=_.pick(data,['productName','status','price','stockQuantity','unit'])
-        let id = req.params.id
+        let id = req.params.productId
         idValidator(id)
-        let isExist  = await Product.findOne({userId:req.user.Id,productId:id})
+        productNameValidator(data)
+        priceValidator(data)
+        unitValidator(data)
+        statusValidator(data)
+        stockQuantityValidator(data)
+        let isExist  = await Product.findOne({ownerId:req.user.id,_id:id})
        if(!isExist) throw new  CustomError("you dont have this product on your list", 400,false); 
         isExist.price=data.price;
         isExist.name=data.name;
         isExist.unit=data.unit;
+        isExist.productName=data.productName;
         isExist.stockQuantity=data.stockQuantity;
         isExist.status=data.status;
         await isExist.save()
+        return null
     }
 
-    async deleteProduct(req,data){
-        data=_.pick(data,['productName','status','price','stockQuantity','unit'])
-        let id = req.params.id
-        idValidator(id)
-        let isExist  = await Product.findOne({userId:req.user.Id,productId:id})
-       if(!isExist) throw new  CustomError("item is not on your list", 400,false); 
+    async deleteEacProduct(req,data){
+        let id = req.params.productId;
+        idValidator(id);
+        console.log(req.user.id)
+        let isExist  = await Product.findOne({ownerId:req.user.id,_id:id})
+       if(!isExist || isExist.length===0) throw new  CustomError("item is not on your list", 400,false); 
        await Product.findByIdAndDelete(id)
-        return { message:`${isExist.productName} has been deleted successfully`}
+        return { message:`${isExist.productName} has been deleted successfully`,status:201,success:true}
+    }
+
+    async deleteAllProduct(req,data){
+       
+        console.log(req.user.id)
+        let isYours  = await Product.findOne({ownerId:req.user.id})
+       if(!isYours || isYours.length===0) throw new  CustomError("item is not on your list", 400,false); 
+       await Product.deleteMany()
+        return { message:`all product has been deleted successfully`,status:201,success:true}
     }
 
     async viewEachProduct(req,data){
         let id = req.params.id
         idValidator(id)
-        let isYours  = await Product.findOne({userId:req.user.Id,productId:id})
+        let isYours  = await Product.findOne({ownerId:req.user.id,productId:id})
        if(!isYours || isYours.length===0) throw new  CustomError("you have no product on ground", 404,false); 
-        return {data:isYours,success:true,}
+        return {data:isYours,success:true,status:200}
     }
 
     async viewAllProduct(req,data){
         let id = req.params.id
         idValidator(id)
-        let isExist  = await Product.findOne({userId:req.user.Id,productId:id})
+        let isExist  = await Product.findOne({ownerId:req.user.id})
        if(isExist) throw new  CustomError("item is not on your list", 400,false); 
        await Product.findByIdAndDelete(id)
         return { message:`${isExist.productName} has been deleted successfully`}

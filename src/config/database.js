@@ -8,11 +8,11 @@ const options = {
   };
  
 module.exports = function (){
-let url=''
-    if(process.env.NODE_EVN==='production'){
-         url=config.atlasdatabaseURI      
-    }else
-    url=config.localdatabaseURI     
+// let url=''
+//     if(process.env.NODE_EVN==='production'){
+        let url=config.atlasdatabaseURI      
+//     }else
+//     url=config.localdatabaseURI     
 
     mongoose.connect(url,options)
     .then(() => {

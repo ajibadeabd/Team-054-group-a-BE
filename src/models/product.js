@@ -10,9 +10,9 @@ const productModel  = new Schema({
         ref:"store"
     },
     ownerId:{
-        type:String, 
-        trim: true,
-        required: [true, "name is required"],
+        type:Schema.Types.ObjectId, 
+        ref:"user",
+        required: [true],
     },
     productName:{
         type:String, 
@@ -39,13 +39,11 @@ const productModel  = new Schema({
         type:Number, 
         trim: true,
         required: [true, "unit is required"],
-        default:0
     },
     stockQuantity:{
         type:Number, 
         trim: true,
         required: [true, "stockQuantity is required"],
-        default:0
     },
    
 },
