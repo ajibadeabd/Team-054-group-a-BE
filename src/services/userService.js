@@ -19,7 +19,7 @@ class UserServices{
         emailValidator(data)
         passwordValidator(data)  
         genderValidator(data)  
-        phoneNumberValidator(data)  
+        phoneNumberValidator(data) 
         nameValidator(data)  
         addressValidator(data)  
         userCategoryValidator(data)  
