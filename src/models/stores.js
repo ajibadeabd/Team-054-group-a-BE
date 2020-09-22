@@ -9,9 +9,14 @@ const shoppingCartModel  = new Schema({
         trim: true,
         required: [true, "name is required"],
     },
-    userId:{
+    farmerId:{
         type:Schema.Types.ObjectId, 
-        required: [true, "userId  is required"],
+        // required: [true, "farmerId  is required"],
+        ref:"user"
+    },
+    storeOwnerId:{
+        type:Schema.Types.ObjectId, 
+        required: [true, "storeOwnerId  is required"],
         ref:"user"
     },
      details:{

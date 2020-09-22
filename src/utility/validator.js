@@ -63,3 +63,12 @@ exports.productNameValidator =(data)=>{
     if(isNaN(data.price)  || !data.price || data.price<0)  throw new CustomError("provide a valid price", 400,false);
 
  }
+ exports.storeNameValidator =(data)=>{
+    if(data.storeName===''  || !data.storeName) 
+     throw new CustomError("provide a store name", 400,false);
+
+ };
+ exports.detailsValidator =(data)=>{
+    if(!data.details || data.details==='')  throw new CustomError("provide a description for your store", 400,false);
+
+ }

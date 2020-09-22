@@ -9,4 +9,5 @@ router.post("/edit-product/:productId",auth,farmerCntr.editProduct);
 router.delete("/delete-each-product/:productId",auth,farmerCntr.deleteEacProduct);
 router.delete("/delete-all-product",auth,farmerCntr.deleteAllProduct);
 router.get("/all-product",auth,farmerCntr.getProduct);
+router.get("/dashboard",auth,farmerCntr.dashboard);
 module.exports =  router;

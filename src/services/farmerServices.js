@@ -1,4 +1,3 @@
-const Store = require('../models/stores')
 const Product = require('../models/product')
 const CustomError = require('../utility/CustomError')
 const {idValidator,statusValidator,stockQuantityValidator,
@@ -82,15 +81,23 @@ class farmerServices{
     async viewAllProduct(req,data){
         let id = req.params.id
         idValidator(id)
-        let isExist  = await Product.findOne({ownerId:req.user.id})
+        let isExist  = await Product.find({ownerId:req.user.id})
        if(isExist) throw new  CustomError("item is not on your list", 400,false); 
        await Product.findByIdAndDelete(id)
-        return { message:`${isExist.productName} has been deleted successfully`}
+        return { message:`${isExist.productName} has been deleted successfully`,success:true,status:200}
     }
-   
-
+    
+    async dashboard(req,data){
+        // available','sold'
+        let isAvailable  = await Product.find({ownerId:req.user.id,status:"available"},
+        {__v:0,ownerId:0})
+        let isSold  = await Product.find({ownerId:req.user.id,status:"sold"},
+        {__v:0,ownerId:0})
+        let myProductStore  = await Product.find({ownerId:req.user.id},
+        {__v:0,_id:0,status:0,_id:0,unit:0,stockQuantity:0,ownerId:0,price:0,})
+        return { data:{isAvailable,isSold,myProductStore},success:true,status:200}
+    }
 }
-
 
 module.exports = new farmerServices()
 

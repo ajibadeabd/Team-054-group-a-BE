@@ -29,6 +29,11 @@ class farmCtrl{
       const data = await farmerServices.getProduct(req,req.body)
       res.status(200).json(response(true,data.message,data))
     }
+    
+    async dashboard(req, res){
+      const data = await farmerServices.dashboard(req,req.body)
+      res.status(200).json(response(true,data.message,data))
+    }
 }
 
 
